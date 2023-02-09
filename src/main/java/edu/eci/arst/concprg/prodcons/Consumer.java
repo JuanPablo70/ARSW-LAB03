@@ -31,6 +31,7 @@ public class Consumer extends Thread{
                 }
                 try {
                     queue.wait();
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
