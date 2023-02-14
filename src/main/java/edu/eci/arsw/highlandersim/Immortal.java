@@ -19,14 +19,17 @@ public class Immortal extends Thread {
 
     private boolean paused = false;
 
+    private int id;
 
-    public Immortal(String name, List<Immortal> immortalsPopulation, int health, int defaultDamageValue, ImmortalUpdateReportCallback ucb) {
+
+    public Immortal(String name, List<Immortal> immortalsPopulation, int health, int defaultDamageValue, ImmortalUpdateReportCallback ucb, int id) {
         super(name);
         this.updateCallback=ucb;
         this.name = name;
         this.immortalsPopulation = immortalsPopulation;
         this.health = health;
         this.defaultDamageValue=defaultDamageValue;
+        this.id = id;
     }
 
     public void run() {
@@ -70,17 +73,14 @@ public class Immortal extends Thread {
     }
 
     public void fight(Immortal i2) {
-        Immortal im0;
-        Immortal im1;
-        if (Integer.parseInt(this.getName().substring(2, 3)) < (Integer.parseInt(i2.getName().substring(2, 3)))) {
-            im0 = this;
-            im1 = i2;
-        } else {
-            im0 = i2;
-            im1 = this;
+        Immortal i1 = this;
+        if (i1.getIde() < i2.getIde()) {
+            Immortal temp = i1;
+            i1 = i2;
+            i2 = temp;
         }
-        synchronized (im0) {
-            synchronized (im1) {
+        synchronized (i1) {
+            synchronized (i2) {
                 if (i2.getHealth() > 0) {
                     i2.changeHealth(i2.getHealth() - defaultDamageValue);
                     this.health += defaultDamageValue;
@@ -107,6 +107,10 @@ public class Immortal extends Thread {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    public int getIde() {
+        return id;
     }
 
     @Override

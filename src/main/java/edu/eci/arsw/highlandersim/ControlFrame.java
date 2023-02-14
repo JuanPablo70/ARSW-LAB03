@@ -90,15 +90,30 @@ public class ControlFrame extends JFrame {
                 for (Immortal im : immortals){
                     im.setPaused(true);
                 }
-                /* while */
+
+                while (true) {
+                    boolean scape = true;
+                    for (Immortal im : immortals) {
+                        if (im.getState().equals(Thread.State.RUNNABLE)) {
+                            System.out.println("ESPERANDO A: " + im.getName());
+                            scape = false;
+                        }
+                    }
+                    if (scape) {
+                        System.out.println("SEGUIMOS!!");
+                        break;
+                    }
+                }
+
                 int sum = 0;
                 for (Immortal im : immortals) {
                     sum += im.getHealth();
                 }
 
                 statisticsLabel.setText("<html>"+immortals.toString()+"<br>Health sum:"+ sum);
-                
-                
+                System.out.println(sum + "\n");
+
+
 
             }
         });
@@ -155,7 +170,7 @@ public class ControlFrame extends JFrame {
             List<Immortal> il = new LinkedList<Immortal>();
 
             for (int i = 0; i < ni; i++) {
-                Immortal i1 = new Immortal("im" + i, il, DEFAULT_IMMORTAL_HEALTH, DEFAULT_DAMAGE_VALUE,ucb);
+                Immortal i1 = new Immortal("im" + i, il, DEFAULT_IMMORTAL_HEALTH, DEFAULT_DAMAGE_VALUE,ucb, i);
                 il.add(i1);
             }
             return il;
