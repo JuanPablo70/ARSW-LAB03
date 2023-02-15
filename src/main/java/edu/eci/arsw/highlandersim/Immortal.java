@@ -5,10 +5,10 @@ import java.util.Random;
 
 public class Immortal extends Thread {
 
-    private ImmortalUpdateReportCallback updateCallback=null;
-    
+    private ImmortalUpdateReportCallback updateCallback = null;
+
     private int health;
-    
+
     private int defaultDamageValue;
 
     private final List<Immortal> immortalsPopulation;
@@ -21,20 +21,22 @@ public class Immortal extends Thread {
 
     private int id;
 
+    private boolean alive = true;
+
 
     public Immortal(String name, List<Immortal> immortalsPopulation, int health, int defaultDamageValue, ImmortalUpdateReportCallback ucb, int id) {
         super(name);
-        this.updateCallback=ucb;
+        this.updateCallback = ucb;
         this.name = name;
         this.immortalsPopulation = immortalsPopulation;
         this.health = health;
-        this.defaultDamageValue=defaultDamageValue;
+        this.defaultDamageValue = defaultDamageValue;
         this.id = id;
     }
 
     public void run() {
 
-        while (true) {
+        while (alive) {
             Immortal im;
 
             int myIndex = immortalsPopulation.indexOf(this);
@@ -49,7 +51,7 @@ public class Immortal extends Thread {
             im = immortalsPopulation.get(nextFighterIndex);
 
             //synchronized (immortalsPopulation) {
-                this.fight(im);
+            this.fight(im);
             //}
 
             try {
@@ -79,6 +81,7 @@ public class Immortal extends Thread {
             i1 = i2;
             i2 = temp;
         }
+
         synchronized (i1) {
             synchronized (i2) {
                 if (i2.getHealth() > 0) {
@@ -86,10 +89,12 @@ public class Immortal extends Thread {
                     this.health += defaultDamageValue;
                     updateCallback.processReport("Fight: " + this + " vs " + i2 + "\n");
                 } else {
+                    i2.setAlive(false);
                     updateCallback.processReport(this + " says:" + i2 + " is already dead!\n");
                 }
             }
         }
+
 
     }
 
@@ -111,6 +116,10 @@ public class Immortal extends Thread {
 
     public int getIde() {
         return id;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 
     @Override

@@ -1,0 +1,2 @@
+11. Se puede producir una condición de carrera en el momento en que el hilo principal esté consultando la lista de
+    inmortales y los hilos estén modificándola al remover los muertos de ella.

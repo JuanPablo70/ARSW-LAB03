@@ -69,17 +69,13 @@ public class ControlFrame extends JFrame {
         final JButton btnStart = new JButton("Start");
         btnStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
                 immortals = setupInmortals();
-
                 if (immortals != null) {
                     for (Immortal im : immortals) {
                         im.start();
                     }
                 }
-
                 btnStart.setEnabled(false);
-
             }
         });
         toolBar.add(btnStart);
@@ -91,16 +87,18 @@ public class ControlFrame extends JFrame {
                     im.setPaused(true);
                 }
 
+                int exit;
+
                 while (true) {
-                    boolean scape = true;
+                    exit = 0;
                     for (Immortal im : immortals) {
-                        if (im.getState().equals(Thread.State.RUNNABLE)) {
-                            System.out.println("ESPERANDO A: " + im.getName());
-                            scape = false;
+                        if (im.getState() == Thread.State.RUNNABLE) {
+                            System.out.println(im + "Está corriendo, espero.");
+                            exit++;
                         }
                     }
-                    if (scape) {
-                        System.out.println("SEGUIMOS!!");
+                    if (exit == 0) {
+                        System.out.println("Todos pausados.");
                         break;
                     }
                 }
@@ -145,6 +143,16 @@ public class ControlFrame extends JFrame {
 
         JButton btnStop = new JButton("STOP");
         btnStop.setForeground(Color.RED);
+
+        btnStop.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (Immortal im : immortals) {
+                    im.setAlive(false);
+                }
+            }
+        });
+
         toolBar.add(btnStop);
 
         scrollPane = new JScrollPane();
